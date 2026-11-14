@@ -1,0 +1,538 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Job Finder BD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hero-bg: #123b2a;
+  --green-900: #123b2a;
+  --green-700: #1d5c42;
+  --green-100: #e3efe8;
+  --tag-text: #123b2a;
+  --link: #1d5c42;
+  --gold: #f6c453;
+  --star-on: #d99a00;
+  --bg: #f4f7f5;
+  --card: #ffffff;
+  --text: #1c2a24;
+  --muted: #5d6e65;
+  --border: #d7e2db;
+  --danger: #b3261e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --green-700: #2f8a63; --green-100: #1f3328; --tag-text: #cfe6d9; --link: #6cc49a;
+    --star-on: #f6c453; --bg: #0f1713; --card: #17221c; --text: #e4ede8;
+    --muted: #9bb0a5; --border: #2a3a31; --danger: #ff8a80; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --green-700: #2f8a63; --green-100: #1f3328; --tag-text: #cfe6d9; --link: #6cc49a;
+  --star-on: #f6c453; --bg: #0f1713; --card: #17221c; --text: #e4ede8;
+  --muted: #9bb0a5; --border: #2a3a31; --danger: #ff8a80; color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans Bengali", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+.wrap {
+  max-width: 880px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.hero {
+  background: var(--hero-bg);
+  color: #fff;
+  padding: 28px 0 32px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1.9rem;
+}
+
+.hero p {
+  margin: 4px 0 16px;
+  color: #cfe3d8;
+}
+
+.search {
+  background: #fff;
+  color: #1c2a24;
+  width: 100%;
+  padding: 14px 16px;
+  font: inherit;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  outline: none;
+}
+
+.search:focus {
+  border-color: var(--gold);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin: 20px 0 8px;
+}
+
+.select {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.select select {
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  min-width: 140px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+}
+
+.chip {
+  color: var(--text);
+  font: inherit;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  cursor: pointer;
+}
+
+.chip.active {
+  color: #fff;
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: #fff;
+}
+
+.link {
+  font: inherit;
+  background: none;
+  border: none;
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 9px 4px;
+}
+
+.count {
+  color: var(--muted);
+  margin: 8px 0 12px;
+  font-size: 0.9rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 32px;
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.company {
+  margin: 0;
+  color: var(--link);
+  font-weight: 500;
+}
+
+.star {
+  font-size: 1.5rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  align-self: flex-start;
+}
+
+.star.on {
+  color: var(--star-on);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.tags span {
+  background: var(--green-100);
+  color: var(--tag-text);
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.desc {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.card-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 12px;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+  font-size: 0.9rem;
+}
+
+.deadline {
+  color: var(--muted);
+}
+
+.deadline.urgent {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 0 60px;
+}
+
+.foot {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .select,
+  .select select {
+    width: 100%;
+  }
+  .select {
+    flex: 1 1 45%;
+  }
+}
+
+html, body { height: auto; }
+</style>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+const { useEffect, useMemo, useState } = React;
+// নমুনা ডেটা: এগুলো আসল বিজ্ঞপ্তি নয়। পরে API বা আসল ডেটা দিয়ে বদলে নিন।
+// ডেডলাইন আজকের তারিখ থেকে হিসাব করা হয়, তাই কখনো পুরোনো হবে না।
+const inDays = (n) => {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0, 10);
+};
+
+const CATEGORIES = [
+  "আইটি ও সফটওয়্যার",
+  "ব্যাংক ও ফাইন্যান্স",
+  "মার্কেটিং ও সেলস",
+  "শিক্ষা",
+  "স্বাস্থ্যসেবা",
+  "ইঞ্জিনিয়ারিং",
+  "গার্মেন্টস ও টেক্সটাইল",
+];
+
+const LOCATIONS = ["ঢাকা", "চট্টগ্রাম", "সিলেট", "রাজশাহী", "খুলনা", "রিমোট"];
+
+const TYPES = ["ফুল টাইম", "পার্ট টাইম", "ইন্টার্নশিপ", "কন্ট্রাক্ট"];
+
+const JOBS = [
+  {
+    id: 1,
+    title: "জুনিয়র ফ্রন্টএন্ড ডেভেলপার",
+    company: "টেকনোভা সলিউশনস",
+    location: "ঢাকা",
+    category: "আইটি ও সফটওয়্যার",
+    type: "ফুল টাইম",
+    salary: "৳ ৩০,০০০ – ৪৫,০০০",
+    deadline: inDays(6),
+    description: "React ও আধুনিক CSS-এ কাজ জানা প্রার্থী খোঁজা হচ্ছে। ১ বছরের অভিজ্ঞতা থাকলে ভালো।",
+  },
+  {
+    id: 2,
+    title: "অ্যাসিস্ট্যান্ট অফিসার (ক্রেডিট)",
+    company: "ন্যাশনাল ট্রাস্ট ব্যাংক",
+    location: "চট্টগ্রাম",
+    category: "ব্যাংক ও ফাইন্যান্স",
+    type: "ফুল টাইম",
+    salary: "৳ ২৮,০০০ – ৩৫,০০০",
+    deadline: inDays(12),
+    description: "যেকোনো বিষয়ে স্নাতক। ঋণ বিশ্লেষণ ও গ্রাহক সেবায় আগ্রহী প্রার্থীদের আবেদন করতে বলা হচ্ছে।",
+  },
+  {
+    id: 3,
+    title: "ডিজিটাল মার্কেটিং এক্সিকিউটিভ",
+    company: "ব্রাইটওয়ে এজেন্সি",
+    location: "ঢাকা",
+    category: "মার্কেটিং ও সেলস",
+    type: "ফুল টাইম",
+    salary: "৳ ২৫,০০০ – ৪০,০০০",
+    deadline: inDays(3),
+    description: "ফেসবুক ও গুগল অ্যাডস ক্যাম্পেইন পরিচালনার অভিজ্ঞতা প্রয়োজন।",
+  },
+  {
+    id: 4,
+    title: "ইংরেজি শিক্ষক (পার্ট টাইম)",
+    company: "সানরাইজ কিন্ডারগার্টেন",
+    location: "সিলেট",
+    category: "শিক্ষা",
+    type: "পার্ট টাইম",
+    salary: "৳ ১২,০০০ – ১৮,০০০",
+    deadline: inDays(20),
+    description: "প্রাথমিক স্তরে ইংরেজি পড়ানোর আগ্রহ ও ভালো যোগাযোগ দক্ষতা থাকতে হবে।",
+  },
+  {
+    id: 5,
+    title: "স্টাফ নার্স",
+    company: "লাইফকেয়ার হাসপাতাল",
+    location: "রাজশাহী",
+    category: "স্বাস্থ্যসেবা",
+    type: "ফুল টাইম",
+    salary: "৳ ২২,০০০ – ৩০,০০০",
+    deadline: inDays(9),
+    description: "নার্সিং ডিপ্লোমা বা বিএসসি ইন নার্সিং। শিফটে কাজ করতে রাজি থাকতে হবে।",
+  },
+  {
+    id: 6,
+    title: "সিভিল ইঞ্জিনিয়ার",
+    company: "গ্রিনবিল্ড কনস্ট্রাকশন",
+    location: "খুলনা",
+    category: "ইঞ্জিনিয়ারিং",
+    type: "ফুল টাইম",
+    salary: "৳ ৩৫,০০০ – ৫০,০০০",
+    deadline: inDays(15),
+    description: "সাইট সুপারভিশন ও কোয়ান্টিটি সার্ভের অভিজ্ঞতা সম্পন্ন প্রার্থী চাই।",
+  },
+  {
+    id: 7,
+    title: "প্রোডাকশন সুপারভাইজার",
+    company: "সিটি নিট ফ্যাশনস",
+    location: "ঢাকা",
+    category: "গার্মেন্টস ও টেক্সটাইল",
+    type: "ফুল টাইম",
+    salary: "৳ ২৮,০০০ – ৩৮,০০০",
+    deadline: inDays(5),
+    description: "নিটওয়্যার ফ্যাক্টরিতে লাইন ম্যানেজমেন্টের কমপক্ষে ৩ বছরের অভিজ্ঞতা।",
+  },
+  {
+    id: 8,
+    title: "কন্টেন্ট রাইটার (রিমোট)",
+    company: "ওয়ার্ডক্রাফট স্টুডিও",
+    location: "রিমোট",
+    category: "মার্কেটিং ও সেলস",
+    type: "কন্ট্রাক্ট",
+    salary: "৳ ১৫,০০০ – ২৫,০০০",
+    deadline: inDays(10),
+    description: "বাংলা ও ইংরেজিতে ব্লগ ও সোশ্যাল মিডিয়া কন্টেন্ট লেখার দক্ষতা প্রয়োজন।",
+  },
+  {
+    id: 9,
+    title: "সফটওয়্যার ইন্টার্ন",
+    company: "কোডহাব বিডি",
+    location: "ঢাকা",
+    category: "আইটি ও সফটওয়্যার",
+    type: "ইন্টার্নশিপ",
+    salary: "৳ ৮,০০০ ভাতা",
+    deadline: inDays(18),
+    description: "সিএসই বা সংশ্লিষ্ট বিষয়ের শেষ বর্ষের শিক্ষার্থীরা আবেদন করতে পারবেন।",
+  },
+  {
+    id: 10,
+    title: "রিলেশনশিপ ম্যানেজার",
+    company: "প্রাইম ফাইন্যান্স লিমিটেড",
+    location: "চট্টগ্রাম",
+    category: "ব্যাংক ও ফাইন্যান্স",
+    type: "ফুল টাইম",
+    salary: "৳ ৩৫,০০০ – ৫৫,০০০",
+    deadline: inDays(1),
+    description: "কর্পোরেট ক্লায়েন্ট ম্যানেজমেন্টে অভিজ্ঞ ও টার্গেটভিত্তিক কাজে দক্ষ প্রার্থী চাই।",
+  },
+];
+
+"use strict";
+const STORAGE_KEY = "job-finder-bd:bookmarks";
+const bn = (n) => Number(n).toLocaleString("bn-BD");
+function loadBookmarks() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+    }
+    catch {
+        return [];
+    }
+}
+function daysLeft(deadline) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const end = new Date(deadline + "T00:00:00");
+    return Math.round((end - today) / 86400000);
+}
+function formatDate(deadline) {
+    return new Date(deadline + "T00:00:00").toLocaleDateString("bn-BD", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+}
+function deadlineLabel(days) {
+    if (days < 0)
+        return "মেয়াদ শেষ";
+    if (days === 0)
+        return "আজই শেষ দিন";
+    if (days === 1)
+        return "আর ১ দিন বাকি";
+    return `আর ${bn(days)} দিন বাকি`;
+}
+function App() {
+    const [query, setQuery] = useState("");
+    const [category, setCategory] = useState("");
+    const [location, setLocation] = useState("");
+    const [type, setType] = useState("");
+    const [onlyBookmarks, setOnlyBookmarks] = useState(false);
+    const [bookmarks, setBookmarks] = useState(loadBookmarks);
+    useEffect(() => {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+        }
+        catch {
+            /* স্টোরেজ বন্ধ থাকলে চুপচাপ এড়িয়ে যাই */
+        }
+    }, [bookmarks]);
+    const toggleBookmark = (id) => setBookmarks((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+    const results = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        return JOBS.filter((job) => {
+            if (category && job.category !== category)
+                return false;
+            if (location && job.location !== location)
+                return false;
+            if (type && job.type !== type)
+                return false;
+            if (onlyBookmarks && !bookmarks.includes(job.id))
+                return false;
+            if (q) {
+                const hay = `${job.title} ${job.company} ${job.location} ${job.category}`.toLowerCase();
+                if (!hay.includes(q))
+                    return false;
+            }
+            return true;
+        }).sort((a, b) => a.deadline.localeCompare(b.deadline));
+    }, [query, category, location, type, onlyBookmarks, bookmarks]);
+    const hasFilters = query || category || location || type || onlyBookmarks;
+    const reset = () => {
+        setQuery("");
+        setCategory("");
+        setLocation("");
+        setType("");
+        setOnlyBookmarks(false);
+    };
+    return (React.createElement("div", { className: "app" },
+        React.createElement("header", { className: "hero" },
+            React.createElement("div", { className: "wrap" },
+                React.createElement("h1", null, "Job Finder BD"),
+                React.createElement("p", null, "\u09AC\u09BE\u0982\u09B2\u09BE\u09A6\u09C7\u09B6\u09C7\u09B0 \u099A\u09BE\u0995\u09B0\u09BF\u09B0 \u09AC\u09BF\u099C\u09CD\u099E\u09AA\u09CD\u09A4\u09BF, \u098F\u0995 \u099C\u09BE\u09AF\u09BC\u0997\u09BE\u09AF\u09BC\u0964"),
+                React.createElement("input", { className: "search", type: "search", placeholder: "\u09AA\u09A6, \u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF \u09AC\u09BE \u09B6\u09B9\u09B0 \u09B2\u09BF\u0996\u09C7 \u0996\u09C1\u0981\u099C\u09C1\u09A8\u2026", value: query, onChange: (e) => setQuery(e.target.value), "aria-label": "\u099A\u09BE\u0995\u09B0\u09BF \u0996\u09C1\u0981\u099C\u09C1\u09A8" }))),
+        React.createElement("main", { className: "wrap" },
+            React.createElement("section", { className: "filters", "aria-label": "\u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0" },
+                React.createElement(Select, { label: "\u0995\u09CD\u09AF\u09BE\u099F\u09C7\u0997\u09B0\u09BF", value: category, onChange: setCategory, options: CATEGORIES }),
+                React.createElement(Select, { label: "\u099C\u09C7\u09B2\u09BE/\u09B8\u09CD\u09A5\u09BE\u09A8", value: location, onChange: setLocation, options: LOCATIONS }),
+                React.createElement(Select, { label: "\u09A7\u09B0\u09A8", value: type, onChange: setType, options: TYPES }),
+                React.createElement("button", { className: "chip" + (onlyBookmarks ? " active" : ""), onClick: () => setOnlyBookmarks((v) => !v), "aria-pressed": onlyBookmarks },
+                    "\u2605 \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4 (",
+                    bn(bookmarks.length),
+                    ")"),
+                hasFilters && (React.createElement("button", { className: "link", onClick: reset }, "\u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0 \u09AE\u09C1\u099B\u09C1\u09A8"))),
+            React.createElement("p", { className: "count", "aria-live": "polite" },
+                bn(results.length),
+                "\u099F\u09BF \u099A\u09BE\u0995\u09B0\u09BF \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u0997\u09C7\u099B\u09C7"),
+            results.length === 0 ? (React.createElement("div", { className: "empty" },
+                React.createElement("p", null, "\u0995\u09CB\u09A8\u09CB \u099A\u09BE\u0995\u09B0\u09BF \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964"),
+                React.createElement("p", null, "\u0985\u09A8\u09CD\u09AF \u09B6\u09AC\u09CD\u09A6 \u09A6\u09BF\u09AF\u09BC\u09C7 \u0996\u09C1\u0981\u099C\u09C1\u09A8 \u09AC\u09BE \u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0 \u09AC\u09A6\u09B2\u09BE\u09A8\u0964"))) : (React.createElement("ul", { className: "list" }, results.map((job) => {
+                const days = daysLeft(job.deadline);
+                const saved = bookmarks.includes(job.id);
+                return (React.createElement("li", { key: job.id, className: "card" },
+                    React.createElement("div", { className: "card-top" },
+                        React.createElement("div", null,
+                            React.createElement("h2", null, job.title),
+                            React.createElement("p", { className: "company" }, job.company)),
+                        React.createElement("button", { className: "star" + (saved ? " on" : ""), onClick: () => toggleBookmark(job.id), "aria-pressed": saved, "aria-label": saved ? "সংরক্ষণ বাদ দিন" : "সংরক্ষণ করুন" }, saved ? "★" : "☆")),
+                    React.createElement("div", { className: "tags" },
+                        React.createElement("span", null,
+                            "\uD83D\uDCCD ",
+                            job.location),
+                        React.createElement("span", null, job.type),
+                        React.createElement("span", null, job.category)),
+                    React.createElement("p", { className: "desc" }, job.description),
+                    React.createElement("div", { className: "card-bottom" },
+                        React.createElement("strong", null, job.salary),
+                        React.createElement("span", { className: "deadline" + (days <= 3 ? " urgent" : "") },
+                            deadlineLabel(days),
+                            " \u00B7 ",
+                            formatDate(job.deadline)))));
+            })))),
+        React.createElement("footer", { className: "foot" },
+            React.createElement("div", { className: "wrap" },
+                "\u098F\u0997\u09C1\u09B2\u09CB \u09A8\u09AE\u09C1\u09A8\u09BE \u09A1\u09C7\u099F\u09BE\u0964 \u0986\u09B8\u09B2 \u09AC\u09BF\u099C\u09CD\u099E\u09AA\u09CD\u09A4\u09BF \u09AF\u09CB\u0997 \u0995\u09B0\u09A4\u09C7 ",
+                React.createElement("code", null, "src/data/jobs.js"),
+                " \u09AC\u09A6\u09B2\u09BE\u09A8\u0964"))));
+}
+function Select({ label, value, onChange, options }) {
+    return (React.createElement("label", { className: "select" },
+        React.createElement("span", null, label),
+        React.createElement("select", { value: value, onChange: (e) => onChange(e.target.value) },
+            React.createElement("option", { value: "" }, "\u09B8\u09AC"),
+            options.map((o) => (React.createElement("option", { key: o, value: o }, o))))));
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+
+</body></html>
